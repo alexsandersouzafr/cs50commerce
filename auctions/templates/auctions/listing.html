@@ -1,0 +1,132 @@
+{% extends "auctions/layout.html" %} {% block body %}
+
+<div class="containter-fluid p-3">
+  <div class="row">
+
+  </div>
+
+  <div class="row">
+    <div class="col-4 p-3">
+      <center><img src="{{ listing.image }}" height="180px" /></center>
+    </div>
+
+    <!-- Listing Details -->
+    <div class="col p-3 border border-secondary rounded">
+      <h3>{{ listing.title }}</h3>
+      <p class="text-secondary">
+        {{ listing.category }} - by {{ listing.user }}
+        {% if not listing.running%}
+        <span class="badge badge-danger">CLOSED</span>
+        {% endif %}
+      </p>
+      <p>{{ listing.description }}</p>
+      <table class="table">
+        <tr>
+          <th>START</th>
+          <th></th>
+          <th>LAST BID</th>
+        </tr>
+        <tr>
+          <td>
+            <h4>${{ listing.start }}</h4>
+          </td>
+          <td>
+            <h4><strong>>>></strong></h4>
+          </td>
+          <td>
+            <h4>${{ listing.last_bid }}</h4>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Winner-->
+      {% if not listing.running %}
+      <div>
+        <h6>Winner: <strong>{{last_bidder}}</strong></h6>
+      </div>
+      {% endif %}
+
+      <div>
+        {% if bids == 1 %}
+        <strong>1</strong> bid has been made. {% elif bids > 1 %}
+        <strong>{{ bids }}</strong> bids have been made.
+        {% else %}
+        No bids have been made.
+        {% endif %}
+
+        {% if not listing.running %}
+        This auction is now closed.
+        {% endif %}
+      </div>
+
+      {% if listing.running %}
+      <div class="form-row bg-success text-white p-1 rounded">
+        <!-- bid form -->
+        <div class="col-sm- p-1">
+          <form action="/{{ listing.title }}/bid" method="POST">
+            {% csrf_token %}
+            Place your bid:
+        </div>
+        <div class="col">
+          <input class="form-control form-control-sm" type="number" min="{{ listing.last_bid }}" name="bid" required>
+        </div>
+        <div class="col-sm-">
+          <input class="btn btn-success btn-sm" type="submit" name="submit" value="Bid">
+          <input type="hidden" name="watching" value="bid">
+          </form>
+        </div>
+      </div>
+      <div class="form-row m-1">
+        <!-- watchlist button -->
+        <div class="col-sm-">
+          <form action="/{{listing.title}}" method="POST">
+            {% if not watching %}
+            <!-- Listing not in watchlist. Button: Add -->
+            {% csrf_token %}
+            <input type="hidden" name="watching" value="add" />
+            <input type="submit" class="btn btn-warning btn-sm" value="Add To Watchlist" />
+            {% elif watching %}
+            <!-- Listing in watchlist. Button: Remove -->
+            {% csrf_token %}
+            <input type="hidden" name="watching" value="rm" />
+            <input type="submit" class="btn btn-danger btn-sm" value="Remove From Watchlist" />
+            {% endif %}
+          </form>
+        </div>
+          <!-- Close button-->
+        <div class="col-sm-">
+          {% if listing.user == user %}
+          <a href="/{{listing.title}}/close"><button class="btn btn-warning btn-sm">Close listing</button></a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Comment section -->
+      <div>
+        <p></p>
+        <div class="form-row">
+          <div class="col">
+            <form action="/{{listing.title}}/comment" method="POST">
+              {% csrf_token %}
+              <input class="form-control form-control-sm" type="text" maxlength="240" name="comment">
+          </div>
+          <div class="col-sm-">
+            <input class="btn btn-primary btn-sm" type="submit" value="comment">
+            </form>
+          </div>
+        </div>
+        {% for comment in comments %}
+        <div class="bg-light p-2">
+          <strong>{{comment.user}}: </strong> <br>{{comment.comment}}
+          <hr>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    
+    <div class="col text-left">
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="containter-fluid p-3">
+  <div class="row">
+    <h3>{{ listing.title }}</h3>
+  </div>
+
+  <div class="row">
+    <div class="col-3 p-3">
+      <center><img src="{{ listing.image }}" height="180px" /></center>
+    </div>
+
+    <div class="col p-3 border border-secondary rounded">
+      <p class="text-secondary" style="">{{ listing.category }}</p>
+      <p>{{ listing.description }}</p>
+      <h4>${{ listing.start }}</h4>
+      {% if listing.last_bid == 0 %}
+      <h5>
+        <div class="befirst">Be the first to bid on this listing.</div>
+      </h5>
+      {% else %}
+        <div>Last bid: ${{ listing.last_bid }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
