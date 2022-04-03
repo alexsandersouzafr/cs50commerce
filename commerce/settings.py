@@ -124,5 +124,5 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Activate Django-Heroku.
+# Activate Django-Heroku. oi
 django_heroku.settings(locals())
