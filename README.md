@@ -1,4 +1,4 @@
-# Django Commerce
+# Django e-Commerce
 
 This is a e-commerce made with Django for the Harvard's CS50 - Web Programming With Python and JavaScrip course.
 
